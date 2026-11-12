@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação 2 - Programação Front-End</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+            color: #1a1a2e;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        h1 {
+            font-size: 28px;
+            color: #0f3460;
+            border-bottom: 3px solid #16213e;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #4a5a72;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .question {
+            background: #fafcff;
+            border: 1px solid #dce3ed;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+        .question:hover {
+            border-color: #a0b4cc;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #0f3460;
+            margin-bottom: 10px;
+            font-size: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-text {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .question-text code {
+            background: #eef2f7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #c44536;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 15px;
+        }
+        .options label:hover {
+            background: #eef2f7;
+        }
+        .options input[type="radio"] {
+            accent-color: #0f3460;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .open-answer {
+            width: 100%;
+            min-height: 100px;
+            padding: 14px;
+            border: 2px solid #dce3ed;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            transition: border-color 0.2s;
+            background: #fcfdff;
+            line-height: 1.6;
+        }
+        .open-answer:focus {
+            outline: none;
+            border-color: #0f3460;
+        }
+        .buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin: 30px 0 20px 0;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-check {
+            background: #0f3460;
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+        }
+        .btn-check:hover {
+            background: #1a4a7a;
+            box-shadow: 0 6px 18px rgba(15, 52, 96, 0.4);
+        }
+        .btn-clear {
+            background: #e8edf3;
+            color: #1a1a2e;
+        }
+        .btn-clear:hover {
+            background: #d5dde8;
+        }
+        .btn-print {
+            background: #2d3748;
+            color: white;
+        }
+        .btn-print:hover {
+            background: #1a202c;
+        }
+        
+        /* GABARITO */
+        .gabarito-area {
+            background: #f0f7ff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-top: 30px;
+            border: 2px solid #dce3ed;
+            display: none;
+        }
+        .gabarito-area.show {
+            display: block;
+        }
+        .gabarito-area h3 {
+            color: #0f3460;
+            margin-bottom: 16px;
+            font-size: 22px;
+            text-align: center;
+        }
+        .gabarito-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e8edf3;
+        }
+        .gabarito-item .q-title {
+            font-weight: 700;
+            color: #0f3460;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .gabarito-item .q-resposta {
+            font-weight: 600;
+            color: #1a5a3a;
+            margin: 4px 0;
+        }
+        .gabarito-item .q-explicacao {
+            color: #2a3a5a;
+            line-height: 1.7;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+        .tag {
+            display: inline-block;
+            background: #dce3ed;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .tag-html { background: #d4e0f0; color: #0f3460; }
+        .tag-css { background: #e0d4f0; color: #4c1d95; }
+        .tag-aberta { background: #f0e6d4; color: #7a5a1a; }
+        
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .question { padding: 14px; }
+            .buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; text-align: center; }
+        }
+        @media print {
+            .btn, .buttons { display: none !important; }
+            .gabarito-area { display: block !important; }
+            .question { break-inside: avoid; border: 1px solid #ccc; }
+            .container { box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="avaliacao">
+    <h1>📋 Avaliação B</h1>
+    <p class="subtitle">Programação Front-End &bull; HTML5 Semântico, Tabelas, Métodos HTTP e Flexbox</p>
+
+    <!-- QUESTÃO 1 -->
+    <div class="question" data-q="1">
+        <div class="question-header">
+            <span>Questão 1 – Verdadeiro (V) ou Falso (F) – 0,4</span>
+            <span class="tag tag-html">Semântica &amp; Acessibilidade</span>
+        </div>
+        <div class="question-text">
+            <p>Analise as afirmativas a seguir sobre a sintaxe, hierarquia e semântica do HTML5:</p>
+            <p>
+                <strong>I.</strong> O elemento <code>&lt;article&gt;</code> é indicado para conteúdos autônomos e independentes (como um post de blog ou notícia), enquanto <code>&lt;section&gt;</code> agrupa blocos temáticos relacionados de uma página.<br>
+                <strong>II.</strong> Em um formulário, a associação correta e acessível entre um texto descritivo e seu campo de digitação ocorre ligando o atributo <code>for</code> da tag <code>&lt;label&gt;</code> ao atributo <code>id</code> da tag <code>&lt;input&gt;</code>.<br>
+                <strong>III.</strong> O HTML é considerado uma linguagem de programação completa porque realiza processamento lógico de dados, estruturas de repetição (loops) e conexão direta com bancos de dados.
+            </p>
+            <p><strong>Assinale a alternativa correta:</strong></p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q1" value="a"> a) F – V – V</label>
+            <label><input type="radio" name="q1" value="b"> b) V – V – F</label>
+            <label><input type="radio" name="q1" value="c"> c) V – F – V</label>
+            <label><input type="radio" name="q1" value="d"> d) F – F – V</label>
+            <label><input type="radio" name="q1" value="e"> e) V – V – V</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 2 -->
+    <div class="question" data-q="2">
+        <div class="question-header">
+            <span>Questão 2 – Verdadeiro (V) ou Falso (F) – 0,4</span>
+            <span class="tag tag-css">Métodos &amp; Box Model</span>
+        </div>
+        <div class="question-text">
+            <p>Analise as afirmativas a seguir sobre estilos CSS, Box Model e métodos de envio de formulários:</p>
+            <p>
+                <strong>I.</strong> O método <code>GET</code> anexa os dados preenchidos diretamente na barra de endereços (URL) após o caractere <code>?</code>, sendo recomendado para buscas e filtros, mas inadequado para envio de senhas.<br>
+                <strong>II.</strong> A regra universal <code>* { box-sizing: border-box; }</code> impede o cálculo somatório externo de padding e borda, mantendo as dimensões exatas declaradas em layouts responsivos.<br>
+                <strong>III.</strong> Em uma tabela acessível, a tag <code>&lt;caption&gt;</code> deve ser posicionada no rodapé da tabela, após o fechamento do <code>&lt;tfoot&gt;</code>, para resumir as médias dos dados.
+            </p>
+            <p><strong>Assinale a alternativa correta:</strong></p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q2" value="a"> a) V – V – F</label>
+            <label><input type="radio" name="q2" value="b"> b) F – V – V</label>
+            <label><input type="radio" name="q2" value="c"> c) V – F – V</label>
+            <label><input type="radio" name="q2" value="d"> d) V – F – F</label>
+            <label><input type="radio" name="q2" value="e"> e) F – F – V</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 3 -->
+    <div class="question" data-q="3">
+        <div class="question-header">
+            <span>Questão 3 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">Cálculo de Box Model</span>
+        </div>
+        <div class="question-text">
+            <p>Considere uma caixa HTML estilizada com o modelo de caixa padrão do navegador (<code>box-sizing: content-box</code>):</p>
+            <pre>.caixa {
+  width: 80px;
+  height: 40px;
+  padding: 5px 10px;
+  border: 2px solid #000;
+}</pre>
+            <p>Sabendo que <code>padding: 5px 10px</code> aplica 5px nas margens internas verticais e 10px nas horizontais, qual será a <strong>largura total real renderizada</strong> dessa caixa na tela do navegador?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q3" value="a"> a) 80px</label>
+            <label><input type="radio" name="q3" value="b"> b) 94px</label>
+            <label><input type="radio" name="q3" value="c"> c) 100px</label>
+            <label><input type="radio" name="q3" value="d"> d) 104px</label>
+            <label><input type="radio" name="q3" value="e"> e) 120px</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 4 -->
+    <div class="question" data-q="4">
+        <div class="question-header">
+            <span>Questão 4 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-html">Tabelas</span>
+        </div>
+        <div class="question-text">
+            <p>Na construção de tabelas HTML semânticas e acessíveis, qual atributo de célula é utilizado quando um mesmo dado precisa mesclar e ocupar o espaço de <strong>duas colunas consecutivas</strong> na mesma linha?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q4" value="a"> a) <code>rowspan="2"</code></label>
+            <label><input type="radio" name="q4" value="b"> b) <code>colspan="2"</code></label>
+            <label><input type="radio" name="q4" value="c"> c) <code>scope="colgroup"</code></label>
+            <label><input type="radio" name="q4" value="d"> d) <code>grid-column="2"</code></label>
+            <label><input type="radio" name="q4" value="e"> e) <code>span="2"</code></label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 5 -->
+    <div class="question" data-q="5">
+        <div class="question-header">
+            <span>Questão 5 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">Flexbox</span>
+        </div>
+        <div class="question-text">
+            <p>Deseja-se criar uma barra de navegação com Flexbox em que o logotipo fique posicionado na extremidade esquerda e os links de navegação fiquem alinhados na extremidade direita do container. Qual valor da propriedade <code>justify-content</code> produz exatamente essa distribuição de extremos?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q5" value="a"> a) <code>center</code></label>
+            <label><input type="radio" name="q5" value="b"> b) <code>flex-start</code></label>
+            <label><input type="radio" name="q5" value="c"> c) <code>space-between</code></label>
+            <label><input type="radio" name="q5" value="d"> d) <code>space-around</code></label>
+            <label><input type="radio" name="q5" value="e"> e) <code>stretch</code></label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 6 -->
+    <div class="question" data-q="6">
+        <div class="question-header">
+            <span>Questão 6 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">CSS Modular</span>
+        </div>
+        <div class="question-text">
+            <p>Qual é a principal vantagem técnica de utilizar o CSS na modalidade <strong>externa</strong> (através da tag <code>&lt;link rel="stylesheet" href="estilo.css"&gt;</code> no <code>&lt;head&gt;</code>), em comparação com estilos em linha (<em>inline</em>)?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q6" value="a"> a) Elimina a necessidade de criar arquivos HTML</label>
+            <label><input type="radio" name="q6" value="b"> b) Permite reaproveitar uma única folha de estilos em várias páginas e possibilita que o navegador armazene o arquivo em cache</label>
+            <label><input type="radio" name="q6" value="c"> c) Executa comandos de banco de dados diretamente pelo arquivo CSS</label>
+            <label><input type="radio" name="q6" value="d"> d) Garante que o site funcione mesmo se o usuário desativar o navegador</label>
+            <label><input type="radio" name="q6" value="e"> e) Torna obrigatório o uso de JavaScript para aplicar cores</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 7 - ABERTA -->
+    <div class="question" data-q="7">
+        <div class="question-header">
+            <span>Questão 7 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Explique detalhadamente</strong> qual é a diferença entre os métodos de envio de formulário <code>GET</code> e <code>POST</code> no que diz respeito ao caminho percorrido pelos dados até o destino. Por que nenhum dos dois garante segurança por si só?</p>
+        </div>
+        <textarea class="open-answer" id="q7" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 8 - ABERTA -->
+    <div class="question" data-q="8">
+        <div class="question-header">
+            <span>Questão 8 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Explique detalhadamente</strong> o que é uma <strong>Media Query</strong> (ex: <code>@media (min-width: 768px)</code>) e qual é o seu papel na criação de um layout web responsivo.</p>
+            <p style="font-size:14px; color:#4a5a72; margin-top:6px;">Inclua em sua resposta: como a regra funciona, o que significa min-width e por que ela evita barras de rolagem horizontal.</p>
+        </div>
+        <textarea class="open-answer" id="q8" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 9 - ABERTA -->
+    <div class="question" data-q="9">
+        <div class="question-header">
+            <span>Questão 9 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Explique detalhadamente</strong> a importância de utilizar o atributo <code>scope</code> (com <code>scope="col"</code> e <code>scope="row"</code>) nas células <code>&lt;th&gt;</code> em tabelas HTML com cabeçalhos duplos (no topo das colunas e no início das linhas).</p>
+        </div>
+        <textarea class="open-answer" id="q9" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 10 - ABERTA -->
+    <div class="question" data-q="10">
+        <div class="question-header">
+            <span>Questão 10 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p>Observe o trecho de código CSS abaixo, aplicado a um catálogo de produtos:</p>
+            <pre>.grade-produtos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.cartao {
+  flex: 1 1 200px;
+}</pre>
+            <p><strong>Explique detalhadamente</strong> o que acontece com a exibição dos cartões quando a página passa de uma tela larga de computador para uma tela estreita de celular (360px).</p>
+        </div>
+        <textarea class="open-answer" id="q10" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="buttons">
+        <button class="btn btn-check" onclick="mostrarGabarito()">📋 Ver Gabarito</button>
+        <button class="btn btn-clear" onclick="limparRespostas()">🔄 Limpar Respostas</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <!-- GABARITO COMPLETO -->
+    <div class="gabarito-area" id="gabaritoArea">
+        <h3>📋 Gabarito Oficial com Explicações</h3>
+
+        <!-- G1 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 1 – Verdadeiro (V) ou Falso (F)</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) V – V – F</strong></div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>I. VERDADEIRO</strong> — O <code>&lt;article&gt;</code> delimita conteúdo independente e distribuível fora da página; <code>&lt;section&gt;</code> agrupa blocos temáticos dependentes.</li>
+                    <li><strong>II. VERDADEIRO</strong> — A associação acessível ocorre ligando o atributo <code>for</code> do label ao atributo <code>id</code> do input correspondente.</li>
+                    <li><strong>III. FALSO</strong> — O HTML é uma linguagem de <strong>marcação</strong>, não executa cálculos, condicionais nem laços lógicos (loops).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G2 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 2 – Verdadeiro (V) ou Falso (F)</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>a) V – V – F</strong></div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>I. VERDADEIRO</strong> — O método GET anexa os parâmetros visíveis na URL após <code>?</code>, sendo ótimo para links de busca, mas inseguro para senhas.</li>
+                    <li><strong>II. VERDADEIRO</strong> — A regra <code>border-box</code> mantém as dimensões declaradas absorvendo padding e borda internamente.</li>
+                    <li><strong>III. FALSO</strong> — O elemento <code>&lt;caption&gt;</code> deve ser obrigatoriamente o <strong>primeiro filho direto</strong> de <code>&lt;table&gt;</code>, nunca no rodapé.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G3 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 3 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>d) 104px</strong></div>
+            <div class="q-explicacao">
+                <p>Cálculo em <code>content-box</code>: Largura do conteúdo (80px) + padding lateral esquerdo (10px) + padding lateral direito (10px) + borda esquerda (2px) + borda direita (2px) = <code>80 + 20 + 4 = 104px</code>.</p>
+            </div>
+        </div>
+
+        <!-- G4 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 4 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) <code>colspan="2"</code></strong></div>
+            <div class="q-explicacao">
+                <p>O atributo <code>colspan</code> (column span) mescla células horizontalmente através de colunas consecutivas.</p>
+            </div>
+        </div>
+
+        <!-- G5 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 5 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>c) <code>space-between</code></strong></div>
+            <div class="q-explicacao">
+                <p><code>space-between</code> distribui o primeiro item no início e o último no final do eixo principal, separando o logotipo e o menu para extremidades opostas.</p>
+            </div>
+        </div>
+
+        <!-- G6 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 6 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) Permite reaproveitar uma única folha de estilos em várias páginas e possibilita que o navegador armazene o arquivo em cache</strong></div>
+            <div class="q-explicacao">
+                <p>O CSS externo separa conteúdo visual da estrutura HTML, centraliza a manutenção de um site inteiro e acelera carregamentos futuros usando o cache do navegador.</p>
+            </div>
+        </div>
+
+        <!-- G7 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 7 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <p><strong>Caminho dos dados:</strong> No método <code>GET</code>, os dados viajam expostos na URL do navegador após o sinal de <code>?</code> (ficando registrados no histórico). No método <code>POST</code>, os dados viajam encapsulados internamente no corpo da requisição HTTP.</p>
+                <p><strong>Segurança:</strong> Nenhum dos dois métodos é seguro isoladamente porque ambos trafegam em texto puro. A proteção real contra interceptação e espionagem de dados exige a camada de criptografia de transporte do protocolo <strong>HTTPS</strong>.</p>
+            </div>
+        </div>
+
+        <!-- G8 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 8 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <p><strong>O que é Media Query:</strong> É uma regra condicional do CSS (ex.: <code>@media (min-width: 768px)</code>) que aplica blocos de estilos específicos apenas quando a tela do dispositivo atende a determinadas condições de exibição.</p>
+                <p><strong>Papel no layout responsivo:</strong> Permite reorganizar os elementos da página (mudar de 1 para múltiplas colunas, ajustar tamanhos de fonte, empilhar menus) para que a interface se adapte com conforto a celulares, tablets e computadores sem gerar barras de rolagem horizontal indesejadas.</p>
+            </div>
+        </div>
+
+        <!-- G9 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 9 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <p>Em tabelas complexas que possuem cabeçalhos na horizontal e na vertical simultaneamente, os leitores de tela não conseguem adivinhar a direção da leitura. O uso de <code>scope="col"</code> associa explicitamente o título à coluna de dados abaixo dele, e <code>scope="row"</code> associa o título à linha de dados à sua frente, eliminando ambiguidades e permitindo que pessoas que utilizam tecnologias assistivas compreendam a relação direta de cada dado.</p>
+            </div>
+        </div>
+
+        <!-- G10 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 10 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <p>Em uma tela larga de computador, os cartões dividem o espaço horizontalmente em uma mesma linha (com base de 200px cada). Ao passar para uma tela estreita de celular (360px), como não há espaço físico para acomodá-los lado a lado, a propriedade <code>flex-wrap: wrap</code> faz com que os cartões quebrem de linha automaticamente, empilhando-se verticalmente um abaixo do outro e preenchendo a largura total disponível sem estourar o layout da página.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function mostrarGabarito() {
+        const gabarito = document.getElementById('gabaritoArea');
+        gabarito.classList.add('show');
+        gabarito.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function limparRespostas() {
+        document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; });
+        document.querySelectorAll('.open-answer').forEach(el => { el.value = ''; });
+        document.getElementById('gabaritoArea').classList.remove('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onbeforeprint = function() {
+        document.getElementById('gabaritoArea').classList.add('show');
+    };
+</script>
+
+</body>
+</html>

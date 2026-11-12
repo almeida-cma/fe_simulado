@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💻 Laboratórios Práticos • Referência Front-End</title>
+<style>
+  :root{
+    --bg-body:#090d16; --surface-dark:#111827; --surface-card:#18243c;
+    --surface-hover:#1f293d; --primary:#0284c7; --primary-light:#38bdf8;
+    --accent:#ea580c; --accent-hover:#c2410c; --emerald:#10b981;
+    --text-main:#f8fafc; --text-muted:#cbd5e1;
+    --border-dark:#2a3854; --radius-main:16px; --transicao:all .22s ease;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 10% 12%,#0f2b48 0%,#090d16 65%);
+    color:var(--text-main);min-height:100vh;padding:22px 14px 90px;line-height:1.6;
+  }
+  .container{max-width:1150px;margin:0 auto;}
+
+  /* HEADER */
+  .header{
+    background:linear-gradient(135deg,#0369a1 0%,#0284c7 45%,#0d9488 100%);
+    border-radius:var(--radius-main);padding:34px 22px;margin-bottom:22px;text-align:center;
+    color:#fff;box-shadow:0 12px 35px rgba(2,132,199,.35);
+  }
+  .header h1{
+    font-size:clamp(1.4rem,3.2vw,2.1rem);margin-bottom:8px;letter-spacing:-.5px;
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  }
+  .header h1 span{color:#fed7aa;}
+  .header p{opacity:.95;font-size:1rem;max-width:860px;margin:0 auto;}
+  .badge-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+  .badge{
+    background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    padding:5px 14px;border-radius:30px;font-size:.74rem;font-weight:700;color:#fff;
+  }
+
+  /* BARRA DE FILTROS POR TEMA */
+  .filtro-card{
+    background:var(--surface-dark);border:2px solid var(--border-dark);
+    border-radius:var(--radius-main);padding:14px 18px;margin-bottom:24px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .filtro-botoes{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn-filtro{
+    background:#1e293b;color:var(--text-muted);border:1px solid var(--border-dark);
+    padding:8px 16px;border-radius:30px;font-size:.82rem;font-weight:700;cursor:pointer;
+    font-family:inherit;transition:var(--transicao);
+  }
+  .btn-filtro:hover{color:#fff;background:var(--surface-hover);}
+  .btn-filtro.active{
+    background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;
+    border-color:var(--primary-light);box-shadow:0 0 12px rgba(56,189,248,.4);
+  }
+
+  /* CARTÕES DOS LABORATÓRIOS */
+  .lab-card{
+    background:var(--surface-dark);border:2px solid var(--border-dark);
+    border-radius:var(--radius-main);margin-bottom:30px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);transition:var(--transicao);
+  }
+  .lab-card:hover{border-color:#475569;}
+
+  .lab-card-header{
+    padding:18px 22px;background:#0f172a;border-bottom:1px solid var(--border-dark);
+  }
+  .lab-tag-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .tag-num{
+    background:var(--accent);color:#fff;font-size:.76rem;font-weight:900;
+    padding:3px 10px;border-radius:6px;font-family:monospace;
+  }
+  .tag-categoria{
+    background:rgba(56,189,248,.12);color:var(--primary-light);border:1px solid rgba(56,189,248,.3);
+    font-size:.74rem;font-weight:700;padding:3px 10px;border-radius:6px;
+  }
+  .lab-card-title{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:4px;}
+  .lab-card-sub{font-size:.88rem;color:var(--text-muted);}
+
+  /* BARRA DE FERRAMENTAS DO CÓDIGO */
+  .code-wrapper{background:#070b12;border-top:1px solid var(--border-dark);}
+  .code-toolbar{
+    display:flex;justify-content:space-between;align-items:center;
+    background:#0b1120;padding:8px 16px;border-bottom:1px solid #1e293b;flex-wrap:wrap;gap:8px;
+  }
+  .code-abas{display:flex;gap:4px;}
+  .btn-aba{
+    background:transparent;border:none;color:#64748b;padding:6px 12px;
+    font-size:.78rem;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;
+    font-family:inherit;transition:var(--transicao);
+  }
+  .btn-aba:hover{color:#cbd5e1;}
+  .btn-aba.active{color:var(--primary-light);border-bottom-color:var(--primary-light);}
+
+  .code-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .code-actions button{
+    border:none;padding:6px 12px;border-radius:6px;cursor:pointer;
+    font-size:.74rem;font-weight:700;transition:var(--transicao);
+    display:inline-flex;align-items:center;gap:4px;font-family:inherit;color:#fff;
+  }
+  .btn-copy{background:var(--emerald);color:#042f2e;}
+  .btn-copy:hover{background:#059669;color:#fff;}
+  .btn-prev{background:#8b5cf6;}
+  .btn-prev:hover{background:#7c3aed;transform:scale(1.02);}
+  .btn-oc{background:var(--accent);}
+  .btn-oc:hover{background:var(--accent-hover);transform:scale(1.02);}
+  .btn-down{background:var(--primary);}
+  .btn-down:hover{background:#0369a1;transform:scale(1.02);}
+
+  .code-pane{
+    display:none;padding:16px 18px;color:#e2e8f0;font-family:'Courier New',monospace;
+    font-size:.82rem;line-height:1.65;overflow-x:auto;white-space:pre;max-height:380px;
+    background:#070b12;
+  }
+  .code-pane.active{display:block;}
+
+  /* PREVIEW INLINE EM IFRAME */
+  .preview-inline{
+    margin:14px;border:2px solid var(--border-dark);border-radius:12px;
+    overflow:hidden;background:#090d16;
+  }
+  .preview-header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 14px;background:#0f172a;border-bottom:1px solid #1e293b;
+    color:#cbd5e1;font-size:.78rem;font-weight:700;font-family:monospace;
+  }
+  .preview-close{
+    background:transparent;border:1px solid #334155;color:#f87171;
+    padding:2px 8px;border-radius:5px;cursor:pointer;font-size:.72rem;font-weight:700;
+  }
+  .preview-close:hover{background:#450a0a;}
+  .preview-inline iframe{width:100%;height:380px;border:none;background:#fff;display:block;}
+
+  /* PAINEL PEDAGÓGICO DE ANÁLISE */
+  .analise-card{
+    background:#0d1627;border-top:2px solid #1e293b;padding:20px 24px;
+    font-size:.9rem;line-height:1.65;color:#f1f5f9;
+  }
+  .analise-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;}
+  .analise-box{
+    background:rgba(255,255,255,.02);border:1px solid var(--border-dark);
+    border-radius:10px;padding:14px 18px;
+  }
+  .analise-box h4{color:var(--primary-light);font-size:.94rem;margin-bottom:8px;}
+  .analise-box p{color:#cbd5e1;font-size:.88rem;margin-bottom:8px;}
+  .analise-box ul{margin-left:18px;color:#cbd5e1;font-size:.87rem;}
+  .analise-box li{margin-bottom:4px;}
+
+  code{
+    background:#1e293b;color:#38bdf8;padding:2px 6px;border-radius:4px;
+    font-family:'Courier New',monospace;font-size:.88em;font-weight:bold;
+  }
+
+  .toast{
+    position:fixed;bottom:20px;right:20px;background:var(--emerald);color:#042f2e;
+    padding:12px 20px;border-radius:10px;font-weight:800;font-size:.85rem;
+    box-shadow:0 10px 25px rgba(0,0,0,.4);display:none;z-index:9999;
+  }
+
+  @media(max-width:768px){
+    .analise-grid{grid-template-columns:1fr;}
+    .code-toolbar{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header">
+    <h1>💻 Laboratórios Práticos &bull; <span>Código de Referência</span></h1>
+    <p>10 projetos completos demonstrando em tempo real estrutura semântica, tabelas, formulários, Box Model, CSS Grid e Flexbox responsivo.</p>
+    <div class="badge-group">
+      <span class="badge">🧱 HTML5 Semântico</span>
+      <span class="badge">📊 Tabelas Acessíveis</span>
+      <span class="badge">📝 Formulários &amp; Métodos</span>
+      <span class="badge">📦 Box Model Real</span>
+      <span class="badge">📐 Grid &amp; Flexbox</span>
+      <span class="badge">🧪 Preview ao Vivo</span>
+    </div>
+  </header>
+
+  <!-- BARRA DE FILTROS -->
+  <div class="filtro-card">
+    <span style="font-size:.86rem;font-weight:800;color:#94a3b8;">FILTRAR POR TEMA:</span>
+    <div class="filtro-botoes">
+      <button type="button" class="btn-filtro active" data-filtro="todos">🌟 Todos os 10 Labs</button>
+      <button type="button" class="btn-filtro" data-filtro="html">🧱 HTML &amp; Semântica</button>
+      <button type="button" class="btn-filtro" data-filtro="tabelas">📊 Tabelas</button>
+      <button type="button" class="btn-filtro" data-filtro="forms">📝 Formulários</button>
+      <button type="button" class="btn-filtro" data-filtro="boxmodel">📦 Box Model</button>
+      <button type="button" class="btn-filtro" data-filtro="layout">📐 Grid &amp; Flexbox</button>
+    </div>
+  </div>
+
+  <main id="container-labs"></main>
+</div>
+
+<div class="toast" id="toast">✅ Feito!</div>
+
+<script>
+var LABS = [
+  {
+    id: "lab1",
+    num: "LAB 01",
+    titulo: "Estrutura do Documento, Void Elements e Semântica HTML5",
+    sub: "Metadados técnicos no cabeçalho invisível, tags sem fechamento e layout estruturado com tags semânticas.",
+    categorias: ["html"],
+    conceitos: [
+      "O elemento <code>&lt;head&gt;</code> guarda metadados invisíveis (codificação, viewport, título da aba), enquanto o <code>&lt;body&gt;</code> delimita a área visual renderizada.",
+      "Tags como <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code> e <code>&lt;br&gt;</code> são <em>void elements</em> (elementos vazios): são autocontidas e nunca devem receber tag de fechamento.",
+      "O elemento <code>&lt;article&gt;</code> representa conteúdo independente e autônomo (post, notícia), enquanto <code>&lt;section&gt;</code> agrupa blocos temáticos dependentes.",
+      "A acessibilidade de formulários exige ligar o atributo <code>for</code> do <code>&lt;label&gt;</code> ao atributo <code>id</code> do <code>&lt;input&gt;</code>."
+    ],
+    observar: [
+      "Abra o 🧪 Preview: o texto presente dentro de <code>&lt;head&gt;</code> não aparece na tela.",
+      "Repare que a imagem <code>&lt;img&gt;</code> insere o recurso por atributos, sem escrever <code>&lt;/img&gt;</code>.",
+      "Clique no texto 'Buscar notícias': o campo de digitação recebe foco imediatamente devido ao par <code>for='campo-busca'</code> e <code>id='campo-busca'</code>."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Lab 01 — Estrutura e Semântica</title>\n</head>\n<body>\n  <header>\n    <h1>Portal de Notícias 2026</h1>\n  </header>\n\n  <main>\n    <!-- Conteúdo autônomo e independente -->\n    <article>\n      <h2>Lançamento da Web Semântica</h2>\n      <p>Artigo distribuível fora desta página (ex.: em leitores de RSS ou feeds).</p>\n      <!-- Void element: não possui fechamento -->\n      <img src="https://picsum.photos/id/180/400/200" alt="Computador em uma mesa">\n    </article>\n\n    <!-- Seção temática agrupadora -->\n    <section>\n      <h3>Filtros do Portal</h3>\n      <label for="campo-busca">Buscar notícias:</label>\n      <input type="text" id="campo-busca" placeholder="Digite aqui...">\n    </section>\n  </main>\n\n  <footer>\n    <p>&copy; 2026 - Estrutura Semântica Válida</p>\n  </footer>\n</body>\n</html>',
+    css: 'body{font-family:Arial,sans-serif;margin:0;padding:20px;background:#f8fafc;color:#0f172a}header{background:#0284c7;color:#fff;padding:16px;border-radius:8px}main{margin:20px 0}article{background:#fff;border:1px solid #cbd5e1;padding:18px;border-radius:8px;margin-bottom:16px}article img{width:100%;max-width:400px;border-radius:6px;display:block;margin-top:10px}section{background:#f1f5f9;border:1px solid #cbd5e1;padding:16px;border-radius:8px}label{display:block;margin-bottom:6px;font-weight:bold}input{padding:8px 12px;border:1px solid #94a3b8;border-radius:4px;width:100%;max-width:320px}footer{background:#0f172a;color:#94a3b8;text-align:center;padding:12px;border-radius:8px}'
+  },
+  {
+    id: "lab2",
+    num: "LAB 02",
+    titulo: "Tabelas Semânticas com Scope e o Box Model Padrão (Content-Box)",
+    sub: "Construção de tabelas acessíveis e o cálculo matemático somatório do dimensionamento padrão do navegador.",
+    categorias: ["tabelas", "boxmodel"],
+    conceitos: [
+      "Em tabelas acessíveis, o elemento <code>&lt;caption&gt;</code> descreve o assunto e deve ser obrigatoriamente o primeiro filho direto de <code>&lt;table&gt;</code>.",
+      "O atributo <code>scope='col'</code> na célula <code>&lt;th&gt;</code> informa formalmente a tecnologias assistivas que aquele título se aplica à coluna vertical abaixo.",
+      "No modelo de caixa padrão do navegador (<code>box-sizing: content-box</code>), os valores de padding e borda somam por fora da largura declarada.",
+      "Fórmula de largura em content-box: <code>Largura Final = width + padding esquerdo + padding direito + borda esquerda + borda direita</code>."
+    ],
+    observar: [
+      "Na tabela, o <code>&lt;caption&gt;</code> aparece alinhado no topo identificando os dados antes da leitura das células.",
+      "Abaixo da tabela, observe a caixa vermelha: ela declara <code>width: 250px</code>, mas na tela renderiza exatamente <strong>352px</strong> (250 + 50 + 50 + 1 + 1)."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 02 — Tabelas e Box Model</title>\n</head>\n<body>\n  <!-- Tabela semântica com caption no topo e scope="col" -->\n  <table>\n    <caption>Boletim de Avaliação — Módulo Front-End</caption>\n    <thead>\n      <tr>\n        <th scope="col">Estudante</th>\n        <th scope="col">HTML</th>\n        <th scope="col">CSS</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr><td>Ana Silva</td><td>9.5</td><td>8.5</td></tr>\n      <tr><td>João Pereira</td><td>7.0</td><td>9.0</td></tr>\n    </tbody>\n  </table>\n\n  <!-- Caixa em content-box: width 250px resulta em 352px na tela -->\n  <div class="caixa-contentbox">\n    width: 250px + padding: 0 50px + border: 1px = 352px reais\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc}table{width:100%;max-width:500px;border-collapse:collapse;background:#fff;margin-bottom:24px}caption{text-align:left;font-weight:bold;padding:10px;color:#0369a1;background:#e0f2fe}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left}thead th{background:#0369a1;color:#fff}.caixa-contentbox{box-sizing:content-box;width:250px;height:60px;padding:0 50px;border:1px solid #b91c1c;background:#fee2e2;color:#991b1b;font-size:12px;font-weight:bold;display:flex;align-items:center;justify-content:center}'
+  },
+  {
+    id: "lab3",
+    num: "LAB 03",
+    titulo: "Atributo Name em Formulários & Cálculo Exato de Box Model",
+    sub: "Demonstração de campos descartados sem o atributo name e medição de uma caixa que resulta em 104px.",
+    categorias: ["forms", "boxmodel"],
+    conceitos: [
+      "Sem o atributo <code>name</code> em um campo <code>&lt;input&gt;</code>, o dado digitado pelo usuário é descartado pelo navegador e <strong>não é transmitido</strong> na submissão.",
+      "O atributo <code>id</code> identifica o elemento no DOM para estilização e scripts, mas não substitui a função do <code>name</code> no envio.",
+      "Cálculo matemático de caixa em <code>content-box</code>: com <code>width: 80px</code>, <code>padding: 5px 10px</code> (10px em cada lado) e <code>border: 2px solid</code> (2px em cada lado), a largura final é <code>80 + 10 + 10 + 2 + 2 = 104px</code>."
+    ],
+    observar: [
+      "Preencha o formulário e clique no botão: observe a barra de endereços (URL). Apenas o campo que possui o atributo <code>name='usuario'</code> é transmitido.",
+      "A caixa amarela abaixo foi declarada com <code>width: 80px</code>, mas ocupa exatamente <strong>104px</strong> de largura na tela."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 03 — Atributo Name e Cálculo de Caixa</title>\n</head>\n<body>\n  <form method="GET">\n    <h3>Teste de Transmissão de Campos:</h3>\n    <label for="campo-valido">Campo COM atributo name (é transmitido):</label>\n    <input type="text" id="campo-valido" name="usuario" value="Ana">\n\n    <label for="campo-invalido">Campo SEM atributo name (é descartado):</label>\n    <input type="text" id="campo-invalido" value="Dado Não Enviado">\n\n    <button type="submit">Enviar Formulário (GET)</button>\n  </form>\n\n  <h3>Caixa renderizada com 104px reais:</h3>\n  <div class="caixa-104px">\n    80×40 (mede 104px)\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Arial,sans-serif;padding:20px;background:#f8fafc}form{background:#fff;border:1px solid #cbd5e1;padding:18px;border-radius:8px;max-width:460px;margin-bottom:20px}label{display:block;margin-top:10px;font-size:13px;font-weight:bold}input{width:100%;padding:8px;border:1px solid #94a3b8;border-radius:4px;margin-top:4px}button{margin-top:14px;padding:9px 16px;background:#0284c7;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold}.caixa-104px{box-sizing:content-box;width:80px;height:40px;padding:5px 10px;border:2px solid #000;background:#fef3c7;color:#78350f;font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center}'
+  },
+  {
+    id: "lab4",
+    num: "LAB 04",
+    titulo: "Anatomia de Regras CSS e Mesclagem com Colspan",
+    sub: "Decomposição técnica de seletores, propriedades e valores, ao lado de mesclagem horizontal de colunas em tabelas.",
+    categorias: ["html", "tabelas"],
+    conceitos: [
+      "Uma regra CSS completa é composta por: <strong>Seletor</strong> (indica o alvo, ex: <code>h1</code>), <strong>Propriedade</strong> (a característica alterada, ex: <code>color</code>) e <strong>Valor</strong> (o dado aplicado, ex: <code>#2563eb</code>).",
+      "CSS exige dois-pontos (<code>:</code>) entre a propriedade e o valor, e ponto e vírgula (<code>;</code>) no encerramento de cada declaração.",
+      "Em tabelas HTML, o atributo <code>colspan='2'</code> é utilizado para fazer com que uma única célula ocupe o espaço de <strong>duas colunas consecutivas</strong> na mesma linha horizontal."
+    ],
+    observar: [
+      "O título principal da página é estilizado pela regra CSS <code>h1 { color: #2563eb; }</code>.",
+      "Na tabela abaixo, o cabeçalho 'Aulas do Período' se expande sobre duas colunas usando <code>colspan='2'</code>."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 04 — Anatomia CSS e Colspan</title>\n</head>\n<body>\n  <!-- Título formatado pela regra CSS: h1 { color: #2563eb; } -->\n  <h1>Título: Seletor (h1) + Propriedade (color) + Valor (#2563eb)</h1>\n\n  <!-- Tabela com célula mesclando 2 colunas -->\n  <table>\n    <caption>Grade Semanal de Estudos</caption>\n    <thead>\n      <tr>\n        <th scope="col">Dia</th>\n        <th scope="col" colspan="2">Aulas do Período (2 Colunas Mescladas)</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>Segunda</td>\n        <td>HTML5 Semântico</td>\n        <td>CSS Box Model</td>\n      </tr>\n    </tbody>\n  </table>\n</body>\n</html>',
+    css: '/* Anatomia: Seletor { Propriedade: Valor; } */\nh1 {\n  color: #2563eb; /* Seletor: h1 | Propriedade: color | Valor: #2563eb */\n  font-family: Arial, sans-serif;\n  font-size: 1.3rem;\n}\nbody{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc}table{width:100%;max-width:540px;border-collapse:collapse;background:#fff;margin-top:16px}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left}thead th{background:#1e3a8a;color:#fff}caption{font-weight:bold;color:#1e3a8a;padding:8px 0;text-align:left}'
+  },
+  {
+    id: "lab5",
+    num: "LAB 05",
+    titulo: "Controle de Dimensões com Border-Box & Flexbox com Space-Between",
+    sub: "Solução definitiva contra quebra de layout no dimensionamento de caixas e alinhamento em extremidades opostas no Flexbox.",
+    categorias: ["boxmodel", "layout"],
+    conceitos: [
+      "A declaração <code>* { box-sizing: border-box; }</code> faz com que os valores de padding e borda sejam absorvidos <strong>dentro</strong> da largura (<code>width</code>) declarada.",
+      "No modelo <code>border-box</code>, uma caixa com <code>width: 300px</code>, <code>padding: 20px</code> e <code>border: 2px</code> mede rigorosamente os <strong>300px</strong> declarados na tela.",
+      "No Flexbox, o valor <code>justify-content: space-between</code> cola o primeiro elemento no início do eixo e o último elemento no fim, distribuindo o espaço livre entre eles."
+    ],
+    observar: [
+      "Na barra de navegação superior, o logotipo fica fixado na extremidade esquerda e os links colados na extremidade direita.",
+      "A caixa verde abaixo possui 20px de padding e 2px de borda, mas sua largura renderizada na tela é de exatamente 300px."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 05 — Border-Box e Flexbox Space-Between</title>\n</head>\n<body>\n  <!-- Navegação Flexbox com itens nos extremos -->\n  <header class="barra-navegacao">\n    <div class="logo">🚀 MinhaMarca</div>\n    <nav class="links">\n      <a href="#">Início</a>\n      <a href="#">Projetos</a>\n      <a href="#">Contato</a>\n    </nav>\n  </header>\n\n  <!-- Caixa que não estoura o layout -->\n  <div class="caixa-borderbox">\n    width: 300px com padding 20px e border 2px (mede exatamente 300px)\n  </div>\n</body>\n</html>',
+    css: '* { box-sizing: border-box; } /* Absorve padding e borda na largura */\nbody{font-family:Segoe UI,sans-serif;margin:0;padding:20px;background:#f8fafc}.barra-navegacao{\n  display: flex;\n  justify-content: space-between; /* Afasta logo e links para as extremidades */\n  align-items: center;\n  background: #0f172a; color: #fff; padding: 14px 20px; border-radius: 8px;\n}.logo{font-weight:bold;color:#38bdf8}.links a{color:#cbd5e1;text-decoration:none;margin-left:14px;font-weight:bold}.links a:hover{color:#fff}.caixa-borderbox{\n  width: 300px; padding: 20px; border: 2px solid #16a34a;\n  background: #dcfce7; color: #166534; font-weight: bold; font-size: 13px;\n  margin-top: 24px;\n}'
+  },
+  {
+    id: "lab6",
+    num: "LAB 06",
+    titulo: "CSS Grid com a Unidade Proporcional fr & CSS Externo",
+    sub: "Divisão fracionária do espaço disponível no Grid e vinculação de arquivos de estilo externos com a tag link.",
+    categorias: ["layout"],
+    conceitos: [
+      "A unidade <code>fr</code> (fractional unit) é exclusiva do CSS Grid e divide o espaço livre disponível proporcionalmente entre linhas e colunas.",
+      "Na regra <code>grid-template-columns: 1fr 2fr 1fr</code>, o espaço total é dividido em 4 partes: a coluna central recebe 2 partes (50%) e as laterais recebem 1 parte cada (25%).",
+      "Vincular estilos através de arquivo externo (<code>&lt;link rel='stylesheet' href='estilo.css'&gt;</code>) permite reaproveitar o código em múltiplas páginas e viabiliza o cache do navegador."
+    ],
+    observar: [
+      "Redimensione a janela do navegador: as colunas aumentam e diminuem mantendo sempre a coluna central com o dobro do tamanho das colunas laterais.",
+      "Nenhuma coluna estoura o container porque as frações dividem o espaço dinamicamente."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 06 — CSS Grid fr e CSS Externo</title>\n  <!-- Vinculação externa: <link rel="stylesheet" href="estilo.css"> -->\n</head>\n<body>\n  <h2>Grade Proporcional: 1fr | 2fr | 1fr</h2>\n  <p>A coluna central (2fr) ocupa o dobro do espaço de cada coluna lateral (1fr).</p>\n\n  <div class="grid-fracoes">\n    <div class="coluna">1fr (25%)</div>\n    <div class="coluna destaque">2fr (50% do espaço)</div>\n    <div class="coluna">1fr (25%)</div>\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Arial,sans-serif;padding:20px;background:#f8fafc}h2{color:#0284c7}.grid-fracoes{\n  display: grid;\n  grid-template-columns: 1fr 2fr 1fr; /* Soma das frações: 4fr */\n  gap: 12px;\n  margin-top: 16px;\n}.coluna{background:#e0f2fe;border:2px solid #0284c7;color:#0369a1;padding:24px 10px;text-align:center;font-weight:bold;border-radius:6px}.coluna.destaque{background:#dbeafe;border-color:#1e40af;color:#1e3a8a}'
+  },
+  {
+    id: "lab7",
+    num: "LAB 07",
+    titulo: "Diferença entre Padding e Margin & Métodos GET vs POST com HTTPS",
+    sub: "Comparativo visual entre espaçamento interno e externo, e distinção do caminho dos dados nos métodos HTTP.",
+    categorias: ["boxmodel", "forms"],
+    conceitos: [
+      "O <code>padding</code> é o espaçamento interno: fica delimitado pela borda e herda a cor de fundo (<code>background-color</code>) do elemento.",
+      "A <code>margin</code> é o espaçamento externo: fica fora da borda, afasta o elemento de seus vizinhos e sua área é sempre transparente.",
+      "No método <code>GET</code>, os dados viajam expostos na URL após o caractere <code>?</code>. No método <code>POST</code>, os dados viajam encapsulados no corpo da requisição HTTP.",
+      "Tanto GET quanto POST trafegam em texto puro: a segurança contra interceptação na rede depende exclusivamente da camada criptográfica <strong>HTTPS</strong>."
+    ],
+    observar: [
+      "Observe o primeiro bloco: o espaço interno de 20px recebe o fundo verde claro do elemento.",
+      "Observe o segundo bloco: os 20px de margem são transparentes e criam uma barreira de afastamento externa.",
+      "Envie o formulário de teste: os dados digitados aparecem anexados diretamente no final da URL do navegador."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 07 — Padding vs Margin e Métodos HTTP</title>\n</head>\n<body>\n  <!-- Comparação visual de Padding e Margin -->\n  <div class="container-caixas">\n    <div class="bloco com-padding">Padding: 20px (Espaço Interno que recebe a cor de fundo)</div>\n    <div class="bloco com-margin">Margin: 20px (Espaço Externo transparente que afasta vizinhos)</div>\n  </div>\n\n  <!-- Formulário demonstrando dados anexados na URL via GET -->\n  <div class="form-card">\n    <h3>Método GET: parâmetros anexados na URL após o caractere ?</h3>\n    <form method="GET" action="#">\n      <input type="text" name="busca" placeholder="Digite uma busca...">\n      <button type="submit">Enviar por GET</button>\n    </form>\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc}.container-caixas{display:flex;gap:10px;align-items:flex-start}.bloco{border:2px solid #16a34a;background:#dcfce7;color:#166534;font-weight:bold;font-size:12px;width:220px}.com-padding{padding:20px; /* Expansão interna */}.com-margin{margin:20px; /* Afastamento externo */}.form-card{margin-top:24px;background:#fff;border:1px solid #cbd5e1;padding:16px;border-radius:8px;max-width:500px}input{width:100%;padding:8px;border:1px solid #94a3b8;border-radius:4px;margin-bottom:8px}button{background:#0284c7;color:#fff;border:none;padding:8px 16px;border-radius:4px;font-weight:bold;cursor:pointer}'
+  },
+  {
+    id: "lab8",
+    num: "LAB 08",
+    titulo: "Tabelas para Dados vs Layout & Media Queries (@media)",
+    sub: "O uso correto de tabelas para informações relacionais e a adaptação responsiva com regras condicionais de mídia.",
+    categorias: ["tabelas", "layout"],
+    conceitos: [
+      "Tabelas devem ser usadas exclusivamente para <strong>dados tabulares</strong> (que cruzam linhas e colunas para comparação direta). Usar tabelas para layout visual prejudica a acessibilidade e a responsividade.",
+      "Uma <strong>Media Query</strong> (como <code>@media (min-width: 600px)</code>) aplica regras de estilo CSS condicionalmente conforme as características da tela (como largura mínima).",
+      "No padrão <em>mobile-first</em>, define-se o layout básico para telas pequenas (1 coluna) e a media query adiciona mais colunas para telas maiores."
+    ],
+    observar: [
+      "A tabela apresenta dados comparativos de vendas com cabeçalhos bem definidos.",
+      "Redimensione a janela ou clique no botão de preview: a grade de cartões abaixo muda de 1 coluna para 2 colunas assim que a tela atinge 600px de largura."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Lab 08 — Dados Tabulares e Media Queries</title>\n</head>\n<body>\n  <!-- Dados tabulares autênticos -->\n  <table>\n    <caption>Relatório Comparativo de Preços</caption>\n    <thead><tr><th scope="col">Componente</th><th scope="col">Preço</th></tr></thead>\n    <tbody><tr><td>Processador 8-Core</td><td>R$ 899,00</td></tr></tbody>\n  </table>\n\n  <!-- Grade que muda de colunas via Media Query -->\n  <h3>Cartões Responsivos (1 coluna no celular, 2 no computador):</h3>\n  <div class="grade-responsiva">\n    <div class="cartao">Cartão A</div>\n    <div class="cartao">Cartão B</div>\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Arial,sans-serif;padding:20px;background:#f8fafc}table{width:100%;max-width:400px;border-collapse:collapse;background:#fff;margin-bottom:20px}th,td{border:1px solid #cbd5e1;padding:8px;text-align:left}thead th{background:#0284c7;color:#fff}caption{font-weight:bold;text-align:left;padding:6px 0;color:#0284c7}/* Mobile-first: 1 coluna por padrão */\n.grade-responsiva { display: grid; grid-template-columns: 1fr; gap: 12px; }\n.cartao { background: #e0f2fe; border: 2px solid #0284c7; padding: 20px; text-align: center; font-weight: bold; border-radius: 6px; }\n/* Media Query: a partir de 600px de largura, muda para 2 colunas */\n@media (min-width: 600px) {\n  .grade-responsiva { grid-template-columns: 1fr 1fr; }\n}'
+  },
+  {
+    id: "lab9",
+    num: "LAB 09",
+    titulo: "CSS Grid Macro vs Flexbox Micro & Tabela com Cabeçalho Duplo",
+    sub: "Grid gerenciando o esqueleto bidimensional da página, Flexbox nos componentes internos e tabela com scope='col' e scope='row'.",
+    categorias: ["tabelas", "layout"],
+    conceitos: [
+      "O <strong>CSS Grid</strong> é bidimensional (controla linhas e colunas simultaneamente), sendo a melhor escolha para a macroestrutura da página (cabeçalho, barra lateral, miolo e rodapé).",
+      "O <strong>Flexbox</strong> é unidimensional (atua em um eixo por vez: linha OU coluna), sendo ideal para alinhamento de componentes internos (menus, botões, ícones).",
+      "Em tabelas complexas com cabeçalho duplo, o atributo <code>scope='col'</code> titula as colunas verticais e <code>scope='row'</code> titula as linhas horizontais, garantindo a compreensão por leitores de tela."
+    ],
+    observar: [
+      "A estrutura da página usa CSS Grid para posicionar o cabeçalho e o conteúdo principal.",
+      "Dentro do cabeçalho, os links usam Flexbox para se alinharem lado a lado.",
+      "A tabela de horários usa <code>scope='col'</code> no topo das colunas e <code>scope='row'</code> na primeira célula de cada linha."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Lab 09 — Grid vs Flexbox e Scope Duplo</title>\n</head>\n<body>\n  <!-- Macroestrutura com CSS Grid (2D) -->\n  <div class="layout-grid">\n    <!-- Componente interno com Flexbox (1D) -->\n    <header class="menu-flex">\n      <span>Logotipo</span>\n      <nav><a href="#">Início</a><a href="#">Sobre</a></nav>\n    </header>\n    <main class="conteudo">Conteúdo Principal posicionado via Grid</main>\n  </div>\n\n  <!-- Tabela com Cabeçalho Duplo (coluna e linha) -->\n  <table style="margin-top:20px;">\n    <caption>Grade Horária de Disciplinas</caption>\n    <thead>\n      <tr>\n        <th scope="col">Horário</th>\n        <th scope="col">Segunda-feira</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <th scope="row">08h - 10h</th> <!-- scope="row" titula a linha -->\n        <td>Programação Web</td>\n      </tr>\n    </tbody>\n  </table>\n</body>\n</html>',
+    css: 'body{font-family:Segoe UI,sans-serif;margin:0;padding:20px;background:#f8fafc}.layout-grid{\n  display: grid; grid-template-rows: auto 1fr; gap: 10px;\n}.menu-flex{\n  display: flex; justify-content: space-between; align-items: center;\n  background: #0f172a; color: #fff; padding: 12px 18px; border-radius: 6px;\n}.menu-flex a{color:#38bdf8;text-decoration:none;margin-left:10px}.conteudo{background:#fff;border:1px solid #cbd5e1;padding:20px;border-radius:6px}table{width:100%;max-width:400px;border-collapse:collapse;background:#fff}th,td{border:1px solid #cbd5e1;padding:8px}thead th{background:#0284c7;color:#fff}tbody th{background:#e0f2fe;color:#0369a1}'
+  },
+  {
+    id: "lab10",
+    num: "LAB 10",
+    titulo: "CSS Grid com Repeat/Gap e Flexbox com Quebra Automática (Flex-Wrap)",
+    sub: "Sintaxe moderna do Grid com frações personalizadas e catálogo Flexbox com quebra automática de cartões em telas de celular.",
+    categorias: ["layout"],
+    conceitos: [
+      "A função <code>repeat(3, 1fr)</code> é o atalho oficial para <code>1fr 1fr 1fr</code>, criando 3 colunas de larguras idênticas.",
+      "A propriedade <code>gap: 16px</code> define um espaçamento uniforme entre linhas e colunas sem aplicar margens nas bordas externas do container.",
+      "Ao alterar uma coluna para <code>2fr</code>, ela passa a ocupar o dobro do espaço de uma coluna de <code>1fr</code>.",
+      "No Flexbox, a regra <code>flex-wrap: wrap</code> com <code>flex: 1 1 200px</code> permite que os cartões fiquem lado a lado no computador e quebrem linha empilhando-se automaticamente ao abrir em um celular de 360px."
+    ],
+    observar: [
+      "No primeiro exemplo, a grade divide o espaço em 4 frações: a coluna central recebe <code>2fr</code> (50%) e as laterais <code>1fr</code> (25% cada).",
+      "No segundo exemplo, reduza a largura da tela ou do preview: os cartões do catálogo saltam para a linha de baixo sozinhos, sem estourar a tela horizontalmente."
+    ],
+    html: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Lab 10 — Grid Repeat e Flex-Wrap</title>\n</head>\n<body>\n  <!-- 1. Grid com coluna central ocupando o dobro do espaço (2fr) -->\n  <h3>CSS Grid: 1fr | 2fr (coluna central com o dobro) | 1fr com gap: 16px</h3>\n  <div class="grade-repeat">\n    <div class="item">Item 1 (1fr)</div>\n    <div class="item destaque">Item 2 (2fr - Dobro)</div>\n    <div class="item">Item 3 (1fr)</div>\n  </div>\n\n  <!-- 2. Catálogo Flexbox quebrando linha em telas pequenas -->\n  <h3 style="margin-top:24px;">Catálogo Flexbox: flex-wrap: wrap e flex: 1 1 200px</h3>\n  <div class="catalogo-wrap">\n    <div class="card">Produto 1</div>\n    <div class="card">Produto 2</div>\n    <div class="card">Produto 3</div>\n    <div class="card">Produto 4</div>\n  </div>\n</body>\n</html>',
+    css: 'body{font-family:Arial,sans-serif;padding:20px;background:#f8fafc}/* Grid com frações proporcionais */\n.grade-repeat {\n  display: grid;\n  grid-template-columns: 1fr 2fr 1fr; /* Coluna central tem o dobro */\n  gap: 16px;\n}\n.item { background: #e0f2fe; border: 2px solid #0284c7; padding: 18px; text-align: center; font-weight: bold; border-radius: 6px; }\n.item.destaque { background: #dcfce7; border-color: #16a34a; color: #166534; }\n/* Flexbox com quebra automática de linha */\n.catalogo-wrap {\n  display: flex;\n  flex-wrap: wrap; /* Salta de linha quando não couber */\n  gap: 16px;\n}\n.card {\n  flex: 1 1 200px; /* Base de 200px, cresce e encolhe proporcionalmente */\n  background: #fff; border: 1px solid #cbd5e1; padding: 18px; border-radius: 6px; text-align: center; font-weight: bold;\n}'
+  }
+];
+
+function montarArquivoUnico(lab) {
+  return '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + lab.titulo + '</title>\n  <style>\n' + lab.css + '\n  </style>\n</head>\n<body>\n' + lab.html.replace(/<!DOCTYPE html>[\s\S]*?<body>/i, '').replace(/<\/body>[\s\S]*?<\/html>/i, '').trim() + '\n</body>\n</html>';
+}
+
+function renderizarLabs(filtro) {
+  var container = document.getElementById('container-labs');
+  container.innerHTML = '';
+
+  LABS.forEach(function(lab) {
+    if (filtro !== 'todos' && lab.categorias.indexOf(filtro) === -1) return;
+
+    var card = document.createElement('article');
+    card.className = 'lab-card';
+    card.id = 'card-' + lab.id;
+
+    var arqUnico = montarArquivoUnico(lab);
+
+    var listaConceitos = lab.conceitos.map(function(c) { return '<li>' + c + '</li>'; }).join('');
+    var listaObservar = lab.observar.map(function(o) { return '<li>' + o + '</li>'; }).join('');
+
+    card.innerHTML =
+      '<div class="lab-card-header">' +
+        '<div class="lab-tag-meta">' +
+          '<span class="tag-num">' + lab.num + '</span>' +
+          lab.categorias.map(function(cat) { return '<span class="tag-categoria">' + cat.toUpperCase() + '</span>'; }).join('') +
+        '</div>' +
+        '<h3 class="lab-card-title">' + lab.titulo + '</h3>' +
+        '<p class="lab-card-sub">' + lab.sub + '</p>' +
+      '</div>' +
+      '<div class="code-wrapper">' +
+        '<div class="code-toolbar">' +
+          '<div class="code-abas">' +
+            '<button type="button" class="btn-aba active" data-lab="' + lab.id + '" data-pane="tudo">Arquivo Único</button>' +
+            '<button type="button" class="btn-aba" data-lab="' + lab.id + '" data-pane="html">HTML</button>' +
+            '<button type="button" class="btn-aba" data-lab="' + lab.id + '" data-pane="css">CSS</button>' +
+          '</div>' +
+          '<div class="code-actions">' +
+            '<button type="button" class="btn-copy" data-copy="' + lab.id + '">📋 Copiar</button>' +
+            '<button type="button" class="btn-prev" data-prev="' + lab.id + '">🧪 Preview</button>' +
+            '<button type="button" class="btn-oc" data-oc="' + lab.id + '">▶️ OneCompiler</button>' +
+            '<button type="button" class="btn-down" data-down="' + lab.id + '">⬇️ Baixar</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="code-pane active" id="' + lab.id + '-pane-tudo"><pre>' + escapeHtml(arqUnico) + '</pre></div>' +
+        '<div class="code-pane" id="' + lab.id + '-pane-html"><pre>' + escapeHtml(lab.html) + '</pre></div>' +
+        '<div class="code-pane" id="' + lab.id + '-pane-css"><pre>' + escapeHtml(lab.css) + '</pre></div>' +
+      '</div>' +
+      '<div id="preview-area-' + lab.id + '"></div>' +
+      '<div class="analise-card">' +
+        '<div class="analise-grid">' +
+          '<div class="analise-box">' +
+            '<h4>📘 Conceitos Técnicos Demonstrados:</h4>' +
+            '<ul>' + listaConceitos + '</ul>' +
+          '</div>' +
+          '<div class="analise-box">' +
+            '<h4>🔍 O que Testar e Observar no Código:</h4>' +
+            '<ul>' + listaObservar + '</ul>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    container.appendChild(card);
+  });
+
+  vincularEventos();
+}
+
+function vincularEventos() {
+  document.querySelectorAll('.btn-aba').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var labId = btn.dataset.lab;
+      var pane = btn.dataset.pane;
+      var card = document.getElementById('card-' + labId);
+      card.querySelectorAll('.btn-aba').forEach(function(b) { b.classList.remove('active'); });
+      card.querySelectorAll('.code-pane').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(labId + '-pane-' + pane).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.btn-copy').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var labId = btn.dataset.copy;
+      var card = document.getElementById('card-' + labId);
+      var text = card.querySelector('.code-pane.active pre').textContent;
+      copiarTexto(text);
+    });
+  });
+
+  document.querySelectorAll('.btn-prev').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var labId = btn.dataset.prev;
+      var lab = LABS.find(function(l) { return l.id === labId; });
+      var area = document.getElementById('preview-area-' + labId);
+      var antigo = area.querySelector('.preview-inline');
+      if (antigo) { antigo.remove(); return; }
+
+      var caixa = document.createElement('div');
+      caixa.className = 'preview-inline';
+      caixa.innerHTML =
+        '<div class="preview-header">' +
+          '<span>🧪 Preview ao Vivo — ' + lab.num + '</span>' +
+          '<button type="button" class="preview-close">✕ Fechar</button>' +
+        '</div>' +
+        '<iframe sandbox="allow-scripts allow-forms allow-same-origin" srcdoc="' + escapeAttr(montarArquivoUnico(lab)) + '"></iframe>';
+
+      caixa.querySelector('.preview-close').addEventListener('click', function() { caixa.remove(); });
+      area.appendChild(caixa);
+    });
+  });
+
+  document.querySelectorAll('.btn-oc').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var labId = btn.dataset.oc;
+      var lab = LABS.find(function(l) { return l.id === labId; });
+      var url = 'https://onecompiler.com/html?code=' + encodeURIComponent(montarArquivoUnico(lab));
+      window.open(url, '_blank', 'noopener');
+    });
+  });
+
+  document.querySelectorAll('.btn-down').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var labId = btn.dataset.down;
+      var lab = LABS.find(function(l) { return l.id === labId; });
+      var blob = new Blob([montarArquivoUnico(lab)], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = labId + '.html';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 30000);
+      mostrarToast('✅ Download iniciado!');
+    });
+  });
+}
+
+function copiarTexto(texto) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(function() { mostrarToast('✅ Código copiado!'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = texto; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); mostrarToast('✅ Código copiado!'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+
+var toastTimer = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.style.display = 'none'; }, 2500);
+}
+
+function escapeHtml(t) {
+  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function escapeAttr(t) {
+  return String(t).replace(/"/g, '&quot;');
+}
+
+document.querySelectorAll('.btn-filtro').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.btn-filtro').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderizarLabs(btn.dataset.filtro);
+  });
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+  renderizarLabs('todos');
+});
+</script>
+</body>
+</html>

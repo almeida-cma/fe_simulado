@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulados • Programação Front-End (HTML5 & CSS3)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f1724;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #f8fafc;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            padding: 40px 20px 30px;
+            text-align: center;
+            border-bottom: 4px solid #e94560;
+        }
+
+        .header h1 {
+            font-size: clamp(26px, 4vw, 36px);
+            color: #ffffff;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .header h1 span {
+            color: #e94560;
+        }
+
+        .header p {
+            color: #a8b8d0;
+            font-size: 17px;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: #e94560;
+            color: #fff;
+            padding: 4px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        .container {
+            flex: 1;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 40px 20px 20px;
+            width: 100%;
+        }
+
+        /* ========== CARDS DAS AVALIAÇÕES ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 26px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #1a2332;
+            border-radius: 16px;
+            padding: 28px 24px;
+            border: 1px solid #2a3a50;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e94560, #f5a623);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border-color: #e94560;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card .card-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #e94560;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .card h2 {
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card .card-subtitle {
+            color: #8a9bb5;
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .card .card-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .card .card-details .tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .card .card-details .tag.html {
+            background: #f0db4f25;
+            color: #fcd34d;
+            border: 1px solid #f0db4f40;
+        }
+
+        .card .card-details .tag.css {
+            background: #4fc3f725;
+            color: #38bdf8;
+            border: 1px solid #4fc3f740;
+        }
+
+        .card .card-details .tag.questoes {
+            background: #81c78425;
+            color: #86efac;
+            border: 1px solid #81c78440;
+        }
+
+        .card .card-desc {
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            background: #0f1724;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border-left: 3px solid #e94560;
+        }
+
+        .card .btn-abrir {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .card .btn-abrir:hover {
+            background: #c73652;
+            transform: scale(1.02);
+        }
+
+        /* CARD AVALIAÇÃO GERAL / 3º LINK */
+        .card.card-alt {
+            border-color: #3b82f6;
+        }
+        .card.card-alt .card-number {
+            color: #38bdf8;
+        }
+        .card.card-alt .card-desc {
+            border-left-color: #38bdf8;
+        }
+        .card.card-alt .btn-abrir {
+            background: #0284c7;
+        }
+        .card.card-alt .btn-abrir:hover {
+            background: #0369a1;
+        }
+
+        /* CARD TESTES DE REVISÃO ONLINE (NOVO LINK) */
+        .card.card-testes {
+            border-color: #10b981;
+        }
+        .card.card-testes .card-number {
+            color: #10b981;
+        }
+        .card.card-testes .card-desc {
+            border-left-color: #10b981;
+        }
+        .card.card-testes .btn-abrir {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        .card.card-testes .btn-abrir:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+        }
+        .tag.online {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        /* ========== SEÇÃO INFORMAÇÕES ========== */
+        .info-section {
+            background: #1a2332;
+            border-radius: 16px;
+            padding: 28px 32px;
+            border: 1px solid #2a3a50;
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px;
+        }
+
+        .info-section ul li {
+            color: #cbd5e1;
+            font-size: 14px;
+            padding: 8px 12px;
+            background: #0f1724;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #1e293b;
+        }
+
+        .info-section ul li .check {
+            color: #81c784;
+            font-weight: bold;
+        }
+
+        /* ========== RODAPÉ ========== */
+        .footer {
+            background: #0a111e;
+            border-top: 2px solid #1a2a3a;
+            padding: 30px 20px 25px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer .formulario-box {
+            background: #1a2332;
+            border-radius: 16px;
+            padding: 28px 32px;
+            border: 1px solid #2a3a50;
+            max-width: 720px;
+            margin: 0 auto 20px;
+            text-align: left;
+        }
+
+        .footer .formulario-box h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer .formulario-box .sub {
+            color: #8a9bb5;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .footer .formulario-box .link-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #0f3460;
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .footer .formulario-box .link-form:hover {
+            background: #1a4a7a;
+            transform: scale(1.02);
+        }
+
+        .footer .formulario-box .instrucoes {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: #0f1724;
+            border-radius: 10px;
+            border-left: 3px solid #f5a623;
+        }
+
+        .footer .formulario-box .instrucoes p {
+            color: #b0c4de;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footer .formulario-box .instrucoes strong {
+            color: #f5a623;
+        }
+
+        .footer .copy {
+            color: #4a5a72;
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .info-section ul { grid-template-columns: 1fr; }
+            .footer .formulario-box { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>📚 <span>Simulados</span> Front-End</h1>
+        <p>HTML5 Semântico, Tabelas Acessíveis, Formulários, Box Model, CSS Grid e Flexbox</p>
+        <span class="badge">🎯 Avaliações &bull; 10 Questões &bull; 4,0 Pontos</span>
+    </header>
+
+    <div class="container">
+        <div class="cards-grid">
+
+            <!-- CARD 1: AVALIAÇÃO A -->
+            <div class="card">
+                <div>
+                    <div class="card-number">📋 Simulado A</div>
+                    <h2>Avaliação A</h2>
+                    <div class="card-subtitle">Versão 1 &bull; 10 Questões Estruturadas</div>
+                    <div class="card-details">
+                        <span class="tag html">HTML5 Semântico</span>
+                        <span class="tag css">Box Model &amp; Grid</span>
+                        <span class="tag questoes">10 questões</span>
+                    </div>
+                    <div class="card-desc">
+                        <strong>Conteúdo:</strong> &lt;head&gt; vs &lt;body&gt;, Void Elements (&lt;img&gt;, &lt;input&gt;), Atributo name em formulários, Content-Box (352px), anatomia CSS, border-box, unidade fr no Grid, padding vs margin e repeat(3, 1fr).
+                    </div>
+                </div>
+                <a href="av1.html" target="_blank" class="btn-abrir">
+                    <span>📖</span> Abrir Simulado A
+                </a>
+            </div>
+
+            <!-- CARD 2: AVALIAÇÃO B -->
+            <div class="card">
+                <div>
+                    <div class="card-number">📋 Simulado B</div>
+                    <h2>Avaliação B</h2>
+                    <div class="card-subtitle">Versão 2 &bull; Questões Espelhadas</div>
+                    <div class="card-details">
+                        <span class="tag html">Tabelas &amp; Forms</span>
+                        <span class="tag css">Flexbox &amp; Media</span>
+                        <span class="tag questoes">10 questões</span>
+                    </div>
+                    <div class="card-desc">
+                        <strong>Conteúdo:</strong> &lt;article&gt; vs &lt;section&gt;, associação &lt;label for&gt; + &lt;input id&gt;, GET vs POST, cálculo de Box Model (104px), colspan="2", Flexbox space-between, CSS externo, @media queries e flex-wrap.
+                    </div>
+                </div>
+                <a href="av2.html" target="_blank" class="btn-abrir">
+                    <span>📖</span> Abrir Simulado B
+                </a>
+            </div>
+
+            <!-- CARD 3: AVALIAÇÃO INTEGRADA -->
+            <div class="card card-alt">
+                <div>
+                    <div class="card-number">🌐 Avaliação Geral</div>
+                    <h2>Simulado Integrado</h2>
+                    <div class="card-subtitle">Versão Unificada &bull; Banco Completo</div>
+                    <div class="card-details">
+                        <span class="tag html">Revisão Geral</span>
+                        <span class="tag css">Front-End Completo</span>
+                        <span class="tag questoes">Simulado 3</span>
+                    </div>
+                    <div class="card-desc">
+                        <strong>Acesso Completo:</strong> Acesse o simulador de prova unificado com todas as questões e práticas laboratoriais para reforço de estudos pré-prova.
+                    </div>
+                </div>
+                <a href="avaliacao.html" target="_blank" class="btn-abrir">
+                    <span>🚀</span> Abrir Avaliação Geral
+                </a>
+            </div>
+
+            <!-- CARD 4: TESTES DE REVISÃO ONLINE (GITHUB PAGES) -->
+            <div class="card card-testes">
+                <div>
+                    <div class="card-number">🧪 Prática Online</div>
+                    <h2>Testes de Revisão</h2>
+                    <div class="card-subtitle">Ambiente Online &bull; GitHub Pages</div>
+                    <div class="card-details">
+                        <span class="tag online">Online</span>
+                        <span class="tag html">Interativo</span>
+                        <span class="tag questoes">Repositório Oficial</span>
+                    </div>
+                    <div class="card-desc">
+                        <strong>Testes e Exercícios:</strong> Acesse a plataforma oficial de testes práticos de revisão para treinar a resolução de questões antes da avaliação.
+                    </div>
+                </div>
+                <a href="https://almeida-cma.github.io/fe_testes/" target="_blank" rel="noopener noreferrer" class="btn-abrir">
+                    <span>🌐</span> Acessar Testes de Revisão &rarr;
+                </a>
+            </div>
+
+        </div>
+
+        <!-- SEÇÃO INFORMAÇÕES -->
+        <div class="info-section">
+            <h3><span>📌</span> Sobre os Simulados</h3>
+            <ul>
+                <li><span class="check">✅</span> 10 questões em cada versão (Total: 4,0 pontos)</li>
+                <li><span class="check">✅</span> Questões 1-2: V/F com 3 afirmativas (0,4 pt cada)</li>
+                <li><span class="check">✅</span> Questões 3-6: Múltipla Escolha (0,35 pt cada)</li>
+                <li><span class="check">✅</span> Questões 7-10: Abertas / Dissertativas (0,45 pt cada)</li>
+                <li><span class="check">✅</span> Gabarito completo com explicações detalhadas</li>
+                <li><span class="check">✅</span> Sugestões de resposta completas para as abertas</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- RODAPÉ COM FORMULÁRIO -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="formulario-box">
+                <h3>📝 Formulário de Entrega</h3>
+                <p class="sub">
+                    Preencha o formulário institucional com o link do seu portfólio/repositório ou anexe seu relatório em PDF.
+                </p>
+
+                <a href="https://forms.gle/zbUB57A4FteUDsKSA" target="_blank" rel="noopener noreferrer" class="link-form">
+                    <span>📋</span> Acessar Formulário de Relatório &rarr;
+                </a>
+
+                <div class="instrucoes">
+                    <p>
+                        <strong>📌 Instruções:</strong><br>
+                        1. Resolva os simulados (A ou B) ou faça os testes de revisão online.<br>
+                        2. Use o botão <em>"Ver Gabarito"</em> para conferir seus erros e acertos.<br>
+                        3. Clique em <em>"Imprimir / PDF"</em> para salvar a folha de respostas preenchida.<br>
+                        4. Envie o arquivo gerado através do formulário acima.
+                    </p>
+                </div>
+            </div>
+
+            <div class="copy">
+                &copy; 2026 — Programação Front-End &bull; Temas 03 a 08 &bull; 
+                <a href="#" onclick="window.print(); return false;">🖨️ Imprimir</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação 1 - Programação Front-End</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+            color: #1a1a2e;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        h1 {
+            font-size: 28px;
+            color: #0f3460;
+            border-bottom: 3px solid #16213e;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #4a5a72;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .question {
+            background: #fafcff;
+            border: 1px solid #dce3ed;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+        .question:hover {
+            border-color: #a0b4cc;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #0f3460;
+            margin-bottom: 10px;
+            font-size: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-text {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .question-text code {
+            background: #eef2f7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #c44536;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 15px;
+        }
+        .options label:hover {
+            background: #eef2f7;
+        }
+        .options input[type="radio"] {
+            accent-color: #0f3460;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .open-answer {
+            width: 100%;
+            min-height: 100px;
+            padding: 14px;
+            border: 2px solid #dce3ed;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            transition: border-color 0.2s;
+            background: #fcfdff;
+            line-height: 1.6;
+        }
+        .open-answer:focus {
+            outline: none;
+            border-color: #0f3460;
+        }
+        .buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin: 30px 0 20px 0;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-check {
+            background: #0f3460;
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+        }
+        .btn-check:hover {
+            background: #1a4a7a;
+            box-shadow: 0 6px 18px rgba(15, 52, 96, 0.4);
+        }
+        .btn-clear {
+            background: #e8edf3;
+            color: #1a1a2e;
+        }
+        .btn-clear:hover {
+            background: #d5dde8;
+        }
+        .btn-print {
+            background: #2d3748;
+            color: white;
+        }
+        .btn-print:hover {
+            background: #1a202c;
+        }
+        
+        /* GABARITO */
+        .gabarito-area {
+            background: #f0f7ff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-top: 30px;
+            border: 2px solid #dce3ed;
+            display: none;
+        }
+        .gabarito-area.show {
+            display: block;
+        }
+        .gabarito-area h3 {
+            color: #0f3460;
+            margin-bottom: 16px;
+            font-size: 22px;
+            text-align: center;
+        }
+        .gabarito-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e8edf3;
+        }
+        .gabarito-item .q-title {
+            font-weight: 700;
+            color: #0f3460;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .gabarito-item .q-resposta {
+            font-weight: 600;
+            color: #1a5a3a;
+            margin: 4px 0;
+        }
+        .gabarito-item .q-explicacao {
+            color: #2a3a5a;
+            line-height: 1.7;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+        .tag {
+            display: inline-block;
+            background: #dce3ed;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .tag-html { background: #d4e0f0; color: #0f3460; }
+        .tag-css { background: #e0d4f0; color: #4c1d95; }
+        .tag-aberta { background: #f0e6d4; color: #7a5a1a; }
+        
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .question { padding: 14px; }
+            .buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; text-align: center; }
+        }
+        @media print {
+            .btn, .buttons { display: none !important; }
+            .gabarito-area { display: block !important; }
+            .question { break-inside: avoid; border: 1px solid #ccc; }
+            .container { box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="avaliacao">
+    <h1>📋 Avaliação A</h1>
+    <p class="subtitle">Programação Front-End &bull; HTML5, Tabelas, Formulários, Box Model e CSS Layout</p>
+
+    <!-- QUESTÃO 1 -->
+    <div class="question" data-q="1">
+        <div class="question-header">
+            <span>Questão 1 – Verdadeiro (V) ou Falso (F) – 0,4</span>
+            <span class="tag tag-html">HTML5 Estrutural</span>
+        </div>
+        <div class="question-text">
+            <p>Analise as afirmativas a seguir sobre a estrutura fundamental do documento HTML e a semântica na web:</p>
+            <p>
+                <strong>I.</strong> A tag <code>&lt;head&gt;</code> armazena metadados técnicos invisíveis ao usuário (como charset e título da aba), enquanto o <code>&lt;body&gt;</code> delimita o conteúdo visual renderizado na tela.<br>
+                <strong>II.</strong> Tags como <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code> e <code>&lt;br&gt;</code> são classificadas como <em>void elements</em> (elementos vazios) e exigem obrigatoriamente tags de fechamento como <code>&lt;/img&gt;</code> e <code>&lt;/input&gt;</code>.<br>
+                <strong>III.</strong> O HTML5 introduziu elementos estruturais semânticos (como <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code> e <code>&lt;footer&gt;</code>) que organizam a página e comunicam significado a tecnologias assistivas e mecanismos de busca.
+            </p>
+            <p><strong>Assinale a alternativa correta:</strong></p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q1" value="a"> a) V – F – V</label>
+            <label><input type="radio" name="q1" value="b"> b) V – V – F</label>
+            <label><input type="radio" name="q1" value="c"> c) F – V – V</label>
+            <label><input type="radio" name="q1" value="d"> d) F – F – V</label>
+            <label><input type="radio" name="q1" value="e"> e) V – V – V</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 2 -->
+    <div class="question" data-q="2">
+        <div class="question-header">
+            <span>Questão 2 – Verdadeiro (V) ou Falso (F) – 0,4</span>
+            <span class="tag tag-css">Tabelas &amp; Box Model</span>
+        </div>
+        <div class="question-text">
+            <p>Analise as afirmativas a seguir sobre tabelas, formulários e o CSS Box Model:</p>
+            <p>
+                <strong>I.</strong> O atributo <code>scope="col"</code> em uma célula <code>&lt;th&gt;</code> associa explicitamente o cabeçalho à coluna correspondente, auxiliando a navegação por leitores de tela.<br>
+                <strong>II.</strong> No modelo padrão do navegador (<code>box-sizing: content-box</code>), ao declarar <code>width: 250px</code>, <code>padding: 0 50px</code> e <code>border: 1px</code>, a largura final renderizada será de exatamente 250px.<br>
+                <strong>III.</strong> O método <code>POST</code> envia os dados no corpo da requisição e não na URL, mas tanto o <code>GET</code> quanto o <code>POST</code> trafegam em texto puro se a conexão não utilizar criptografia HTTPS.
+            </p>
+            <p><strong>Assinale a alternativa correta:</strong></p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q2" value="a"> a) F – V – V</label>
+            <label><input type="radio" name="q2" value="b"> b) V – F – V</label>
+            <label><input type="radio" name="q2" value="c"> c) V – V – F</label>
+            <label><input type="radio" name="q2" value="d"> d) F – F – V</label>
+            <label><input type="radio" name="q2" value="e"> e) V – F – F</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 3 -->
+    <div class="question" data-q="3">
+        <div class="question-header">
+            <span>Questão 3 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-html">Formulários</span>
+        </div>
+        <div class="question-text">
+            <p>No desenvolvimento de formulários HTML, qual atributo é indispensável para identificar e enviar o valor de um campo para processamento no servidor (ou para ser identificado como chave do dado), sem o qual o valor digitado pelo usuário simplesmente não é transmitido?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q3" value="a"> a) <code>id</code></label>
+            <label><input type="radio" name="q3" value="b"> b) <code>class</code></label>
+            <label><input type="radio" name="q3" value="c"> c) <code>name</code></label>
+            <label><input type="radio" name="q3" value="d"> d) <code>placeholder</code></label>
+            <label><input type="radio" name="q3" value="e"> e) <code>for</code></label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 4 -->
+    <div class="question" data-q="4">
+        <div class="question-header">
+            <span>Questão 4 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">Sintaxe CSS</span>
+        </div>
+        <div class="question-text">
+            <p>Considere a regra CSS a seguir:</p>
+            <pre>h1 {
+  color: #2563eb;
+}</pre>
+            <p>Na anatomia dessa regra, como são classificados, respectivamente, o termo <code>h1</code>, o termo <code>color</code> e o termo <code>#2563eb</code>?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q4" value="a"> a) Propriedade, Valor e Seletor</label>
+            <label><input type="radio" name="q4" value="b"> b) Seletor, Propriedade e Valor</label>
+            <label><input type="radio" name="q4" value="c"> c) Seletor, Atributo e Tag</label>
+            <label><input type="radio" name="q4" value="d"> d) Classe, Declaração e Unidade</label>
+            <label><input type="radio" name="q4" value="e"> e) Tag, Seletor e Atributo</label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 5 -->
+    <div class="question" data-q="5">
+        <div class="question-header">
+            <span>Questão 5 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">Box Model</span>
+        </div>
+        <div class="question-text">
+            <p>Ao dimensionar componentes no CSS, qual valor da propriedade <code>box-sizing</code> faz com que o <code>padding</code> e a <code>border</code> sejam calculados <strong>dentro</strong> da largura (<code>width</code>) e da altura declaradas, impedindo que a caixa estoure o tamanho planejado na tela?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q5" value="a"> a) <code>content-box</code></label>
+            <label><input type="radio" name="q5" value="b"> b) <code>border-box</code></label>
+            <label><input type="radio" name="q5" value="c"> c) <code>margin-box</code></label>
+            <label><input type="radio" name="q5" value="d"> d) <code>flex-box</code></label>
+            <label><input type="radio" name="q5" value="e"> e) <code>inherit-box</code></label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 6 -->
+    <div class="question" data-q="6">
+        <div class="question-header">
+            <span>Questão 6 – Múltipla Escolha – 0,35</span>
+            <span class="tag tag-css">CSS Grid</span>
+        </div>
+        <div class="question-text">
+            <p>No CSS Grid, qual unidade de medida exclusiva representa uma fração proporcional do espaço disponível no container para dimensionar linhas e colunas?</p>
+        </div>
+        <div class="options">
+            <label><input type="radio" name="q6" value="a"> a) <code>px</code></label>
+            <label><input type="radio" name="q6" value="b"> b) <code>rem</code></label>
+            <label><input type="radio" name="q6" value="c"> c) <code>vh</code></label>
+            <label><input type="radio" name="q6" value="d"> d) <code>fr</code></label>
+            <label><input type="radio" name="q6" value="e"> e) <code>%</code></label>
+        </div>
+    </div>
+
+    <!-- QUESTÃO 7 - ABERTA -->
+    <div class="question" data-q="7">
+        <div class="question-header">
+            <span>Questão 7 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Explique detalhadamente</strong> a diferença conceitual e prática entre as propriedades CSS <code>padding</code> e <code>margin</code>.</p>
+            <p style="font-size:14px; color:#4a5a72; margin-top:6px;">Inclua em sua resposta: onde cada uma atua em relação à borda, como se comportam quanto à cor de fundo do elemento e qual a função de cada uma no espaçamento.</p>
+        </div>
+        <textarea class="open-answer" id="q7" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 8 - ABERTA -->
+    <div class="question" data-q="8">
+        <div class="question-header">
+            <span>Questão 8 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Explique detalhadamente</strong> por que no desenvolvimento web moderno é considerado incorreto utilizar elementos <code>&lt;table&gt;</code> para montar o layout geral da página (cabeçalho, colunas, rodapé). Em quais situações o uso de tabelas é verdadeiramente apropriado?</p>
+        </div>
+        <textarea class="open-answer" id="q8" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 9 - ABERTA -->
+    <div class="question" data-q="9">
+        <div class="question-header">
+            <span>Questão 9 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p><strong>Diferencie a finalidade de aplicação</strong> entre o <strong>CSS Grid</strong> e o <strong>Flexbox</strong>, exemplificando uma situação adequada para o uso de cada um na mesma página.</p>
+            <p style="font-size:14px; color:#4a5a72; margin-top:6px;">Inclua em sua resposta: dimensionalidade de cada ferramenta (unidimensional vs bidimensional) e o papel de cada uma na macroestrutura e nos componentes.</p>
+        </div>
+        <textarea class="open-answer" id="q9" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- QUESTÃO 10 - ABERTA -->
+    <div class="question" data-q="10">
+        <div class="question-header">
+            <span>Questão 10 – Questão Aberta – 0,45</span>
+            <span class="tag tag-aberta">Dissertativa</span>
+        </div>
+        <div class="question-text">
+            <p>Observe a regra CSS abaixo, aplicada a um container de produtos:</p>
+            <pre>.grade-produtos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}</pre>
+            <p><strong>Explique detalhadamente</strong> o que significam a função <code>repeat(3, 1fr)</code> e a propriedade <code>gap: 16px</code>. O que acontece com a distribuição do espaço se uma das colunas for alterada de <code>1fr</code> para <code>2fr</code>?</p>
+        </div>
+        <textarea class="open-answer" id="q10" placeholder="Digite sua resposta aqui..."></textarea>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="buttons">
+        <button class="btn btn-check" onclick="mostrarGabarito()">📋 Ver Gabarito</button>
+        <button class="btn btn-clear" onclick="limparRespostas()">🔄 Limpar Respostas</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <!-- GABARITO COMPLETO -->
+    <div class="gabarito-area" id="gabaritoArea">
+        <h3>📋 Gabarito Oficial com Explicações</h3>
+
+        <!-- G1 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 1 – Verdadeiro (V) ou Falso (F)</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>a) V – F – V</strong></div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>I. VERDADEIRO</strong> — O <code>&lt;head&gt;</code> abriga metadados e configurações técnicas, enquanto o <code>&lt;body&gt;</code> delimita a área renderizada.</li>
+                    <li><strong>II. FALSO</strong> — Elementos vazios (void elements) <strong>não</strong> possuem fechamento (nunca escreva <code>&lt;/img&gt;</code>).</li>
+                    <li><strong>III. VERDADEIRO</strong> — Elementos como <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code> e <code>&lt;article&gt;</code> organizam e comunicam significado estrutural aos navegadores e leitores de tela.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G2 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 2 – Verdadeiro (V) ou Falso (F)</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) V – F – V</strong></div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>I. VERDADEIRO</strong> — O atributo <code>scope="col"</code> associa a célula de cabeçalho à coluna correspondente na árvore de acessibilidade.</li>
+                    <li><strong>II. FALSO</strong> — No modelo padrão <code>content-box</code>, padding e borda somam por fora: <code>250 + 50 + 50 + 1 + 1 = 352px</code> reais na tela.</li>
+                    <li><strong>III. VERDADEIRO</strong> — O método POST oculta dados da barra de endereços, mas ambos trafegam em texto puro se a conexão não possuir HTTPS.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G3 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 3 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>c) <code>name</code></strong></div>
+            <div class="q-explicacao">
+                <p>O atributo <code>name</code> define a chave do dado enviado. Sem ele, o navegador descarta o campo durante a submissão do formulário. O atributo <code>id</code> serve apenas para vinculação de label e manipulação via CSS/DOM.</p>
+            </div>
+        </div>
+
+        <!-- G4 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 4 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) Seletor, Propriedade e Valor</strong></div>
+            <div class="q-explicacao">
+                <p><code>h1</code> é o <strong>Seletor</strong> (quem recebe o estilo); <code>color</code> é a <strong>Propriedade</strong> (a característica alterada); <code>#2563eb</code> é o <strong>Valor</strong> (o dado aplicado).</p>
+            </div>
+        </div>
+
+        <!-- G5 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 5 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>b) <code>border-box</code></strong></div>
+            <div class="q-explicacao">
+                <p>Com <code>box-sizing: border-box</code>, o navegador absorve os valores de padding e borda <strong>dentro</strong> do <code>width</code> declarado, impedindo que a caixa estoure o tamanho planejado.</p>
+            </div>
+        </div>
+
+        <!-- G6 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 6 – Múltipla Escolha</div>
+            <div class="q-resposta">✅ Resposta correta: <strong>d) <code>fr</code></strong></div>
+            <div class="q-explicacao">
+                <p>A unidade <code>fr</code> (fração) é exclusiva do CSS Grid e divide o espaço livre disponível proporcionalmente entre linhas e colunas.</p>
+            </div>
+        </div>
+
+        <!-- G7 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 7 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>Padding (Espaçamento Interno):</strong> Fica delimitado pela borda, empurra o conteúdo para dentro e <strong>recebe a cor de fundo</strong> (background-color) do elemento.</li>
+                    <li><strong>Margin (Espaçamento Externo):</strong> Fica fora da borda, empurra o elemento para longe de seus vizinhos e é <strong>sempre transparente</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G8 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 8 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <p><strong>Por que não usar tabelas para layout:</strong> Polui a semântica, destrói a acessibilidade para leitores de tela (que anunciam linhas e colunas inexistentes) e dificulta a responsividade em celulares.</p>
+                <p><strong>Uso correto de tabelas:</strong> Exclusivamente para <strong>dados tabulares</strong>, onde informações precisam ser comparadas e cruzadas entre linhas e colunas (ex: boletins de notas, relatórios financeiros, cronogramas).</p>
+            </div>
+        </div>
+
+        <!-- G9 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 9 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><strong>CSS Grid:</strong> É <strong>bidimensional</strong> (controla linhas e colunas simultaneamente). Ideal para a <strong>macroestrutura</strong> da página (esqueleto com topo, barra lateral, miolo e rodapé).</li>
+                    <li><strong>Flexbox:</strong> É <strong>unidimensional</strong> (trabalha em um eixo por vez: linha OU coluna). Ideal para alinhar <strong>componentes internos</strong> (links em uma barra de navegação, grupos de botões).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- G10 -->
+        <div class="gabarito-item">
+            <div class="q-title">Questão 10 – Questão Aberta</div>
+            <div class="q-resposta">📝 Sugestão de Resposta / Critérios de Correção</div>
+            <div class="q-explicacao">
+                <ul>
+                    <li><code>repeat(3, 1fr)</code>: Cria 3 colunas de larguras idênticas dividindo o espaço em 3 frações iguais (<code>1fr 1fr 1fr</code>).</li>
+                    <li><code>gap: 16px</code>: Define um espaçamento uniforme de 16 pixels entre as células da grade.</li>
+                    <li><strong>Alteração para 2fr:</strong> A coluna que receber <code>2fr</code> passará a ocupar o <strong>dobro do espaço</strong> das colunas de <code>1fr</code> (na proporção <code>1fr 2fr 1fr</code>, o espaço total é dividido em 4 partes e a coluna central recebe 50% do espaço livre).</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function mostrarGabarito() {
+        const gabarito = document.getElementById('gabaritoArea');
+        gabarito.classList.add('show');
+        gabarito.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function limparRespostas() {
+        document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; });
+        document.querySelectorAll('.open-answer').forEach(el => { el.value = ''; });
+        document.getElementById('gabaritoArea').classList.remove('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onbeforeprint = function() {
+        document.getElementById('gabaritoArea').classList.add('show');
+    };
+</script>
+
+</body>
+</html>
